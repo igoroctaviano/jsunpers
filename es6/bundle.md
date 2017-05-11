@@ -131,13 +131,13 @@ Lets imagine a conversation! **console.log says:** "Hey code block, do you know 
     console.log("var", a === 1);
     console.log(func());
     
-    function func(){
+    function func() {
       return "hello";
     }
     
     console.log(func2());
     
-    var func2 = function(){
+    var func2 = function() {
       return "hello";
     }
 
@@ -148,4 +148,260 @@ Lets imagine a conversation! **console.log says:** "Hey code block, do you know 
 
 ## But what? why?
 
-In JavaScript we have something called hoising!
+### Chicken Or The Egg?
+
+There's a temptation to think that all of the code you see in a JavaScript program is interpreted line-by-line, top-down in order, as the program executes. While this is substantially true, there's one part of the assumption which can lead to incorrect thinking about your program.
+
+Consider this code:
+
+    a = 2;
+    var a;
+    console.log( a );
+
+What do you expect to be printed in the *console.log* statement?
+
+Many developers would expect *undefined*, since the *var a* statement comes after a = 2, and it would seem natural to assume that the variable is re-defined and thus assigned the default *undefined* value. However, the output will be *2*. 
+
+Consider another example:
+
+    console.log( a );
+    var a = 2;
+
+You might be tempted to assume that, since the previous snippet exhibited some less-than-top-down looking behavior, perhaps in this snippet, *2* will also be printed. Others may think that since *a* variable is used before it is declared, this must result in a *ReferenceError* being thrown.
+
+Unfortunatly, both guesses are incorrect. *undefined* is the output. 
+
+    var a;
+    console.log( a );
+    a = 2;
+
+As we can see now how the things were "moved", the declarations went straight to the top and the assignments left in place, this way *console.log* gets a *undefined* value, since the variable was declared but assigned right after the *console.log* statement.
+
+In JavaScript we have something called hoising! One way of thinking, metaphorically, about this process, is that variable and function decalarations are "moved" from where they appear in the flow of the code to the TOP of the code. This gives rise to the name "Hoisting". In other words, **the egg (declaration) comes before the chicken (assignment)**.
+
+    function func() {
+      return "hello";
+    }
+
+    var a;
+    var func2;
+    a = 1;
+    console.log("var", a === 1);
+    console.log(func());
+    
+    console.log(func2());
+    
+    func2 = function() {
+      return "hello";
+    }
+
+## Double check the results showed above but using the new code "how the things are actually going to execute", now its easy, right?
+
+<sub>This example was took from the **You Don't Know JS** book by Kyle Simpson available for free on GitHub! Check it out [here!](https://github.com/getify/You-Dont-Know-JS)</sub>
+
+# What will be printed?
+
+    var func3 = function funcN(param) {
+      return param > 1 ? "o" + funcN(param-1) : "h";
+    }
+
+    console.log(func3(4));
+    console.log(funcN(3));
+
+## Result:
+
+    oooh
+    ReferenceError: funcN is not defined
+
+## But what? why?
+
+This is a very simple [Recursion](https://en.wikipedia.org/wiki/Recursion_(computer_science)) with a [Ternary Operator](https://developer.mozilla.org/pt-PT/docs/Web/JavaScript/Reference/Operators/Conditional_Operator) being used to compare if the parameter is greater than 1, causing the function to return the string value "o" plus a call to the same function passing the same parameter minus 1, but if its not greater than 1, it will just return a simple string "h".
+
+Following the execution of this code we can see that the *console.log* statement receives a function call as a parameter (that its going to return some value to be printed), so this function *func3* is called with the value *4* as parameter. It will reach the ternary operator with some condition that is *param > 1* and it would be true since (*4* > *1*). The value "o" will be returned from this function with a call to the same function (Recursion!) but passing the value (*param-1*) that its *3*. **When we use recursion, each return will be pushed into the memory stack until we reach some stopping condition (in our case its when param is less than 1, returning just a simple string value, and when we reach this point, all the returns will be popped from the memory stack and reduced to one value.**. Continuing the execution: the condition again, now with our new param value (*3 > 1*), it will return the string value "o" plus the function call with a new parameter *(3-1)*. Again, the condition! (*2 > 1*), and it will result in another return with "o" plus function call with new parameter *(2-1)*. Finally we reach our last condition (1 > 1), and this will be false, causing the return to be the string "h" without another function call, and thats our stopping condition! **As you remember, all those string returns will be popped from the memory stack and reduced into one value that is "oooh"**.
+
+And why the *ReferenceError*? As we can see, the function *funcN* wasnt declared, this function was created as value of the variable *func3*. In JavaScript, if you give a name to this function (function as a value), you can call it INSIDE, JUST INSIDE the function (as recursion). It is not visible outside the function. It's like "letrec" in Lisp. Cool isnt it?
+
+<sub>This last part of the explanation was tooked form [StackOverflow](http://stackoverflow.com/questions/3883780/javascript-recursive-anonymous-function).</sub>
+
+# What will be printed?
+
+    for (var i = 0; i < 10; i++) { }
+    console.log(i);
+
+    for (let iL = 0; iL < 10; iL++) { }
+    console.log(iL);
+
+## Return:
+
+    10
+    ReferenceError: iL is snot defined
+
+## But what? why?
+
+Look at the body of those *for* loop. Nothing in there right? So lets follow the execution: The *for* loop will be executed and the global variable *var i* at the end will have the value 10 as the *for* will execute until the *i* variable reaches 10. Next, the *console.log* statement will be called and it will print 10. Again, another empty *for* but this time with a *let* variable that only exists in the enclosing scope (in this case, inside the *for* loop). Whats going to be printed on this next *console.log* statement right after the *for*? yes, you right, a big ass reference error because it doesnt exist in the global scope! it was declared with *let* inside a *for* loop!
+
+# What will be printed?
+
+    console.log(i);
+    var i = 9;
+
+    console.log(iL);
+    let iL = 10;
+
+## Result:
+
+    undefined
+    ReferenceError: iL is not defined
+
+## But what? why?
+
+Well, lets see this code with the eyes of the compiler:
+
+    var i;
+    console.log(i);
+    i = 9;
+
+    console.log(iL);
+    let iL = 10;
+
+As you can see, when the first *console.log* statement is called, the variale *i* have no value yet, it was decalred and initialized but assinged too late, causing the return of the value *undefined*. But wait a minute, why the *let* variable was not "Hoisted" moved to the top as the *var* was? In ECMAScript 2015, *let* will hoist the variable declaration to the top of the block, BUT NOT the initialization. Contrary to declaring a variable with *var*, which hoists both declaration and initialization, referencing the variable in the block before the initialization results in a *ReferenceError*. The variable is in a "temporal dead zone" from the start of the block until the initialization is processed. So it means that the *console.log* statement will execute and the variable *iL* was not initialized yet, causing *ReferenceError* to occur.
+
+Take care when using *let*! you wanna a exemple?
+
+    function test() {
+    var foo = 33;
+      if (true) {
+        let foo = (foo + 55); // ReferenceError: foo is not defined
+      }
+    }
+    test();
+
+Due to lexical scoping, the identifier "foo" inside the expression (foo + 55) evaluates to the if block's foo, and not the overlying variable foo with the value of 33. In that very line, the if block's "foo" has already been defined and hoisted, but has not yet reached (and terminated) its declaration statement (which is the statement itself): it's still in the temporal dead zone.
+
+<sub>About the hoisting stuff with *lets*, i found it on [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let).</sub>
+
+# What will be printed?
+
+    var a1 = 1;
+
+    {
+      const a1 = 2;
+      console.log(a1);
+
+      {
+        let a1 = 3;
+        console.log(a1);
+      }
+    }
+    console.log(a1);
+
+## Result:
+
+    2
+    3
+    1
+
+## But what? why?
+
+We can see that we have 3 levels of scope here. The global is the first (the one without some curly braces involving it in a hug), the second with the *const* variable inside it and another one inside this one with a *let* variable inside it. We have 3 variables with the same name but declared in different scopes. In this case, as we have the *console.log* statments being called in each different scope, it returns what we expect it to return. But its good to remember that if the variable *a1* inside the innermost scope was a simple *var* but not declared inside this scope, it would pop up onde scope and find the *const* variable in which has a value of 2 and would try to assign again a constant variable causing a *Uncaught TypeError* or if it wasnt a *const* it would change the value. Or maybe, if we didnt have the *a1* declared on this secondary scope, it would pop up to the global scope and it would find the global *a1* and it would override it. Or maybe we were not caring about [strict mode](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Strict_mode) and we didnt have the global variable declared, what you think would happen? the compiler would create it for us, from out of nowhere, like dark magic. Awesome right? nope.
+
+# What will be printed?
+
+    (function() {
+      var a = b = 1;
+    })();
+    console.log(b);
+
+    function ab() {
+      var aAB = bAB = 3;
+    };
+
+    ab();
+    console.log(bAB);
+    console.log(aAB);
+
+## Return:
+
+    1
+    3
+    ReferenceError: aAB is not defined
+
+## But what? why?
+
+As you can see, the first function looks weird. Its just a function that doesnt have a name and its being executed right before its declaration. *[IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE) (Immediately Invoked Function Expression) is a JavaScript function that runs as soon as it is defined*.
+
+Okay, lets understand why we didnt get a big add *ReferenceError* when the *console.log* statement was called with the paramter *b*, thats is a variable that was SEEMS NOT declared in this scope. 
+
+The thing is, when the IFFE function is called, the expression that will be executed inside of it is:
+
+    var a = b = 1;
+
+and in fact is interpreted like:
+
+    var a = (b = 1);
+
+which equals to:
+
+    b = 1; // Woops! b was not declared inside this function!
+    var a = 1;
+
+which assigs the value *1* to a variable *b* that was not declared in this scope (function) and defines a local variable *a*. Whats going to happen is that the engine (something that will execute your code) will look for the reference of *b* to assign the value *1* to it. And guess what? the engine will ask the scope of the function and will discover that it was not declared there. So the engine will pop up one level (reaching the global scope) and since we are not using [strict mode](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Strict_mode), the engine will ask the global scope for the reference of *b* and the compiler will create the variable for the engine, yes! out of nothing, like dark magic! (as the compiler knows that it was used in some code but nobody declared it).
+
+This anwers why we got the value *1* on the first *console.log* statement. And as we can see, the SAME THING occurs in the other normal function (doesnt necessarily need to be an IFFE).
+
+But why we got *ReferenceError* when the last *console.log* statement was called passing the variable *aAB*? well, because it was declared inside the function *ab*, not in the global scope. And you might wonder why the compiler didnt create another global variable... because it was declared! the compiler created the global *bAB* before because it was referenced (and the reference of it wasnt inside the function, in other words, it was not declared inside that function), so the engine moved to the next scope to look for it, and the engine asked the global scope (and the global scope had that because in other time, on the compiler phase, the compiler knew that this variable was referenced in the code and nobody declared it, so the compiler created this variable in the global scope).
+
+<sub>More about it [here](http://stackoverflow.com/questions/33591202/iife-and-global-scope-in-javascript) and [here](https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch2.md).</sub>
+
+# What will be printed by each of the following code snippets?
+
+    var a = 1;
+    var a = 2;
+    console.log(a);
+
+Result: ?
+
+    var a = 1;
+    let a = 2;
+    console.log(a);
+
+Result: ?
+
+    var a = 1;
+    const a = 2;
+    console.log(a);
+
+Result: ?
+
+    let a = 1;
+    const a = 2;
+    console.log(a);
+
+Result: ?
+
+    const a;
+    a = 2;
+    console.log(a);
+
+Result: ?
+
+    let a;
+    a = 2;
+    console.log(a);
+
+Result: ?
+
+## Result:
+
+    2
+    SyntaxError: Identifier 'a' has already been declared
+    SyntaxError: Identifier 'a' has already been declared
+    SyntaxError: Identifier 'a' has already been declared
+    SyntaxError: Missing initializer in const declaration
+    2
+
+## But what? why?
+
+* Independently it the variable is *let, const, var*, you cant declare it in the same scope more than once.
+* You cant declare a *const* (constant) without assigning it right away (as you cant assign again the same *const* variable, because you know, constant are constants.
+* You can declare *let* without assign it right away.
