@@ -405,3 +405,40 @@ Result: ?
 * Independently it the variable is *let, const, var*, you cant declare it in the same scope more than once.
 * You cant declare a *const* (constant) without assigning it right away (as you cant assign again the same *const* variable, because you know, constant are constants.
 * You can declare *let* without assign it right away.
+
+# What will be printed?
+
+    var a = {
+      b: 2
+    };
+    var c = a;
+    c.b = 1;
+    console.log(a.b);
+    console.log(c.b);
+
+    const d = {
+      e: 0
+    };
+    d.e = 1;
+    console.log(d.e);
+    const f = d;
+    f.e = 2;
+    console.log(d.e);
+    console.log(f.e);
+
+    d = a;
+    console(d.b);
+
+## Result:
+
+    1
+    1
+    1
+    2
+    2
+    TypeError: Assignment to constant variable.
+
+## But what? why?
+
+
+

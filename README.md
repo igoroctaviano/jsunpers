@@ -1,2 +1,2 @@
-# jsunpers
+# jsumpers
 JavaScript Unordered Personal Study
