@@ -15,4 +15,4 @@ As only collaborators can contribute for now, create your own branch (use your G
 - [Igor Octaviano](https://github.com/igoroctaviano)
 - [Rafael Câmara](https://github.com/rafaelcaramam)
 
-Made with :heart: by us
+Made with :heart: by coffee
