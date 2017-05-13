@@ -1,4 +1,4 @@
-# Let's begin ?
+# Let's begin?
 
 ![GIF](../gifs/source.gif)
 
@@ -51,9 +51,9 @@
 
 ## But what? why?
 
-Most browsers have a minimum delay that is more then 0, so putting 0 as delay means: Put this task in the basket as soon as possible. If you dont pass the delay parameter to the *setTimeout* function, it menas that it wont necessarily run right away, neither will explicitly settting the delay to 0. The reason is that *setTimeout* removes the function from the execution queue and it will only be invoked after JavaScript has finished with the current execution queue.
+Most browsers have a minimum delay that is more then 0, so putting 0 as delay means: Put this task in the basket as soon as possible. If you don't pass the delay parameter to the *setTimeout* function, it means that it won't necessarily run right away, neither will explicitly setting the delay to 0. The reason is that *setTimeout* removes the function from the execution queue and it will only be invoked after JavaScript has finished with the current execution queue.
 
-When you use a *let* variable in the *for* loop, it means that this variable is not acessible before they are declared in their enclosing block. A variable declared as *let* are block scoped variables. So it means that it only exists inside the *for* loop block. But when you use *var* instead, it means that the variable is scoped to the nearest function block, not in you were using *let* where it would be scoped to the nearest enclosing block. **But both are global if OUTSIDE any block!**
+When you use a *let* variable in the *for* loop, it means that this variable is not acessible before it was declared in their enclosing block. A variable declared as *let* are block scoped variables. So it means that it only exists inside the *for* loop block. But when you use *var* instead, it means that the variable is scoped to the nearest function block, its not the case if you were using *let*, where it would be scoped to the nearest enclosing block. **But both are global if OUTSIDE any block!**
 
     let me = 'go';   // globally scoped
     var i = 'able';  // globally scoped
@@ -71,7 +71,7 @@ They are identical when used like this in a function block:
     }
 
 ### Block
-Here is the differente. *let* is only visible in the *for* loop and *var* is visible to the whole function:
+Here is the diference: *let* is only visible in the *for* loop and *var* is visible to the whole function:
 
     function someFunction() {
         // counter is NOT visible out here
@@ -107,9 +107,11 @@ Assuming [strict mode](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/R
 
 ### Some benefits of *let* variables are:
 * Less risk of overriding some global variable used for something else.
-* Less risk of memory leaks due to variables staying in memory long after they have become irrelevant (in the for example you can see that if you declare a *let* variable inside the *for*, when the *for* completes the execution, the *let* variable will be irrelevant and will be discarded, freeing memory, avoiding leaks!).
+* Less risk of memory leaks due to variables staying in memory long after they have become irrelevant (in the *for* loop example you can see that if you declare a *let* variable inside the *for*, when the *for* completes the execution, the *let* variable will be irrelevant and will be discarded, freeing memory, avoiding leaks!).
 
-# What will be printed?
+# Scopes, lets and vars
+
+## What will be printed?
 
     var ar = 1;
     let et = 1;
@@ -131,13 +133,16 @@ Assuming [strict mode](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/R
     var true
     let false
 
-## What?
+## But what? why?
 
-So, basically, the first *console.log* will ask for the value of the *ar* variable inside this enclosing block of code first. As you can see, the variable *ar* was declared using *var* so it means that it is scoped to the nearest function block, in this case it is global (outside any function) and it can be also acessed before it was declared... So as we can see, we have another declaration of the variable *ar* and as it is *var* it will override the current value of *ar* that is 1, becoming 2 now. 
+So, basically, the first *console.log* will first ask for the value of the *ar* variable inside this enclosing block of code. As you can see, the variable *ar* was declared as *var* so it means that its scoped to the nearest function block, in our case, its the global (outside any function) and, it can be also acessed before it was declared. So as we can observe, we have another declaration of the variable *ar* and as it was declared as *var* it will override the current value of the variable *ar* that is *1*, holding the value *2* now. 
 
-Lets imagine a conversation! **console.log says:** "Hey code block, do you know about *ar*?"; **code block says:** "Fore sure! its value is 2!". Then moving on to the next *console.log* statement... **console.log says:** "Dude, can you tell the value of *et*?"; **code block says:** "Yep! its 2!". As you can see in this example, we are using a *let* variable, it was not overwritten! because this *let* can only exists inside this enclosing block (this is how it works). Moving on... outside this code block.. **console.log says:** "Me again, whats the value of *ar*?"; **code block says:** "Alright, it was overwritten by some other code, it was 1 but now its 2!". Moving on.. we reached our last *console.log* statement! **console.log says:** "Just one more time, whats the value of *et*?"; **code block says:** "Its 1!". And you know why right? this *let* variable belongs to the nearest enclosing block, i means that it belongs to the global scope and it will not be overwritten inside some other code block.
+### Lets imagine a conversation
+**console.log (actually it will be the engine) says:** "Hey code block, do you know about the value of *ar*?"; **code block says:** "Fore sure! his value is 2!". Then moving on to the next *console.log* statement, **console.log says:** "Dude, can you tell the value of *et*?"; **code block says:** "Yep! its 2!". As you can see in this example, we are using a *let* variable, it was not overwritten! because this *let* can only exists inside this enclosing block (this is how it works). Moving on... outside this code block, **console.log says:** "Hey code block, me again, whats the value of this *ar*?"; **code block says:** "Alright, it was overwritten by some other code, it was *1* but now its *2*!". Moving on.. we reached our last *console.log* statement! **console.log says:** "Just one more time, what's the value of *et*?"; **code block says:** "Its *1*!". And you know why, right? this *let* variable belongs to the nearest enclosing block and it means that it belongs to the global scope and it will not be overwritten inside some other code block.
 
-# What will be printed?
+# The hoisting mechanics
+
+## What will be printed?
 
     var a = 1;
     console.log("var", a === 1);
@@ -168,15 +173,15 @@ Consider this code:
 
     a = 2;
     var a;
-    console.log( a );
+    console.log(a);
 
 What do you expect to be printed in the *console.log* statement?
 
-Many developers would expect *undefined*, since the *var a* statement comes after a = 2, and it would seem natural to assume that the variable is re-defined and thus assigned the default *undefined* value. However, the output will be *2*. 
+Many developers would expect *undefined*, since the *var a* statement comes after *a = 2*, and it would seem natural to assume that the variable is re-defined and thus assigned the default *undefined* value. However, the output will be *2*. 
 
 Consider another example:
 
-    console.log( a );
+    console.log(a);
     var a = 2;
 
 You might be tempted to assume that, since the previous snippet exhibited some less-than-top-down looking behavior, perhaps in this snippet, *2* will also be printed. Others may think that since *a* variable is used before it is declared, this must result in a *ReferenceError* being thrown.
@@ -184,10 +189,12 @@ You might be tempted to assume that, since the previous snippet exhibited some l
 Unfortunatly, both guesses are incorrect. *undefined* is the output. 
 
     var a;
-    console.log( a );
+    console.log(a);
     a = 2;
 
 As we can see now how the things were "moved", the declarations went straight to the top and the assignments left in place, this way *console.log* gets a *undefined* value, since the variable was declared but assigned right after the *console.log* statement.
+
+### Hoisting
 
 In JavaScript we have something called hoising! One way of thinking, metaphorically, about this process, is that variable and function decalarations are "moved" from where they appear in the flow of the code to the TOP of the code. This gives rise to the name "Hoisting". In other words, **the egg (declaration) comes before the chicken (assignment)**.
 
@@ -207,14 +214,16 @@ In JavaScript we have something called hoising! One way of thinking, metaphorica
       return "hello";
     }
 
-## Double check the results showed above but using the new code "how the things are actually going to execute", now its easy, right?
+## Double check the results showed above but using the new version of the code "how the things are executed with the eyes of the compiler", now its easy, right?
 
 <sub>This example was took from the **You Don't Know JS** book by Kyle Simpson available for free on GitHub! Check it out [here!](https://github.com/getify/You-Dont-Know-JS)</sub>
 
-# What will be printed?
+# Recursion & memory stack + function mysteries!
+
+## What will be printed?
 
     var func3 = function funcN(param) {
-      return param > 1 ? "o" + funcN(param-1) : "h";
+      return param > 1 ? "o" + funcN(param - 1) : "h";
     }
 
     console.log(func3(4));
@@ -227,11 +236,11 @@ In JavaScript we have something called hoising! One way of thinking, metaphorica
 
 ## But what? why?
 
-This is a very simple [Recursion](https://en.wikipedia.org/wiki/Recursion_(computer_science)) with a [Ternary Operator](https://developer.mozilla.org/pt-PT/docs/Web/JavaScript/Reference/Operators/Conditional_Operator) being used to compare if the parameter is greater than 1, causing the function to return the string value "o" plus a call to the same function passing the same parameter minus 1, but if its not greater than 1, it will just return a simple string "h".
+This is a very simple [Recursion](https://en.wikipedia.org/wiki/Recursion_(computer_science)) with a [Ternary Operator](https://developer.mozilla.org/pt-PT/docs/Web/JavaScript/Reference/Operators/Conditional_Operator) being used to compare if the parameter is greater than *1*, causing the function to return the string value *"o"* plus a call to the same function passing the same parameter minus 1, but if its not greater than *1*, it will just return a simple string *"h"*.
 
-Following the execution of this code we can see that the *console.log* statement receives a function call as a parameter (that its going to return some value to be printed), so this function *func3* is called with the value *4* as parameter. It will reach the ternary operator with some condition that is *param > 1* and it would be true since (*4* > *1*). The value "o" will be returned from this function with a call to the same function (Recursion!) but passing the value (*param-1*) that its *3*. **When we use recursion, each return will be pushed into the memory stack until we reach some stopping condition (in our case its when param is less than 1, returning just a simple string value, and when we reach this point, all the returns will be popped from the memory stack and reduced to one value.**. Continuing the execution: the condition again, now with our new param value (*3 > 1*), it will return the string value "o" plus the function call with a new parameter *(3-1)*. Again, the condition! (*2 > 1*), and it will result in another return with "o" plus function call with new parameter *(2-1)*. Finally we reach our last condition (1 > 1), and this will be false, causing the return to be the string "h" without another function call, and thats our stopping condition! **As you remember, all those string returns will be popped from the memory stack and reduced into one value that is "oooh"**.
+Following the execution of this code we can see that the *console.log* statement receives a function call as a parameter (its going to return some value to be printed), so this function *func3* is called with the value *4* as parameter. It will reach the ternary operator with a condition that is *param > 1* and, it would be true since *4 > 1*. The value *"o"* will be returned from this function with a call to the same function (recursion) but passing the value *param - 1* that would be *3*. **When we use recursion, each return will be pushed into the memory stack until we reach some stopping condition (in our case its when param is less than *1*, returning just a simple string value, and when we reach this point, all the returns will be popped from the memory stack and reduced to one value.**. Continuing the execution: the condition again, now with our new param value *3 > 1*, it will return the string value *"o"* plus the function call with a new parameter *3 - 1*. Again, the condition! *2 > 1* and, this time it will result in another return with *"o"* plus the function call with the new parameter *2 - 1*. Finally we reach our last condition *1 > 1* round and, this will be false of course, causing the return to be the string *"h"* without another function call and, thats our stopping condition. **As you remember, all those string returns will be popped from the memory stack and reduced (aggrouped, summed) into one value that is "oooh"**.
 
-And why the *ReferenceError*? As we can see, the function *funcN* wasnt declared, this function was created as value of the variable *func3*. In JavaScript, if you give a name to this function (function as a value), you can call it INSIDE, JUST INSIDE the function (as recursion). It is not visible outside the function. It's like "letrec" in Lisp. Cool isnt it?
+And why the *ReferenceError*? the function *funcN* was not declared, this function was created as a value of the variable *func3*. In JavaScript, if you give a name to this function (in the case of a function as a value), you can call it INSIDE, JUST INSIDE the function (recursion). It is not visible outside the function. Its like "letrec" in Lisp. Cool isnt it?
 
 <sub>This last part of the explanation was tooked form [StackOverflow](http://stackoverflow.com/questions/3883780/javascript-recursive-anonymous-function).</sub>
 
@@ -246,13 +255,15 @@ And why the *ReferenceError*? As we can see, the function *funcN* wasnt declared
 ## Return:
 
     10
-    ReferenceError: iL is snot defined
+    ReferenceError: iL is not defined
 
 ## But what? why?
 
-Look at the body of those *for* loop. Nothing in there right? So lets follow the execution: The *for* loop will be executed and the global variable *var i* at the end will have the value 10 as the *for* will execute until the *i* variable reaches 10. Next, the *console.log* statement will be called and it will print 10. Again, another empty *for* but this time with a *let* variable that only exists in the enclosing scope (in this case, inside the *for* loop). Whats going to be printed on this next *console.log* statement right after the *for*? yes, you right, a big ass reference error because it doesnt exist in the global scope! it was declared with *let* inside a *for* loop!
+Look at the body of those *for* loops. Nothing in there right? So lets follow the execution: The *for* loop will be executed and the global variable (global because theres no kind of scope embracing those *for* loops) *var i* at the end will have the value *10* as the *for* will execute until the *i* variable reaches 10. Next, the *console.log* statement will be called and it will print 10. Again, another empty *for* but this time with a *let* variable that only exists in the enclosing scope (in this case, inside the *for* loop). Whats going to be printed on this next *console.log* statement right after the *for*? yes, you right, a big ass reference error because it doesnt exist in the global scope! it was declared with *let* inside a *for* loop!
 
-# What will be printed?
+# hmm.. lets see more let and hoisting!
+
+## What will be printed?
 
     console.log(i);
     var i = 9;
@@ -292,7 +303,9 @@ Due to lexical scoping, the identifier "foo" inside the expression (foo + 55) ev
 
 <sub>About the hoisting stuff with *lets*, i found it on [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let).</sub>
 
-# What will be printed?
+# Some pitfalls without our friend, strict mode
+
+## What will be printed?
 
     var a1 = 1;
 
@@ -317,7 +330,9 @@ Due to lexical scoping, the identifier "foo" inside the expression (foo + 55) ev
 
 We can see that we have 3 levels of scope here. The global is the first (the one without some curly braces involving it in a hug), the second with the *const* variable inside it and another one inside this one with a *let* variable inside it. We have 3 variables with the same name but declared in different scopes. In this case, as we have the *console.log* statments being called in each different scope, it returns what we expect it to return. But its good to remember that if the variable *a1* inside the innermost scope was a simple *var* but not declared inside this scope, it would pop up onde scope and find the *const* variable in which has a value of 2 and would try to assign again a constant variable causing a *Uncaught TypeError* or if it wasnt a *const* it would change the value. Or maybe, if we didnt have the *a1* declared on this secondary scope, it would pop up to the global scope and it would find the global *a1* and it would override it. Or maybe we were not caring about [strict mode](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Strict_mode) and we didnt have the global variable declared, what you think would happen? the compiler would create it for us, from out of nowhere, like dark magic. Awesome right? nope.
 
-# What will be printed?
+# IIFEs and fabulous truth behind an expression
+
+## What will be printed?
 
     (function() {
       var a = b = 1;
@@ -367,7 +382,9 @@ But why we got *ReferenceError* when the last *console.log* statement was called
 
 <sub>More about it [here](http://stackoverflow.com/questions/33591202/iife-and-global-scope-in-javascript) and [here](https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch2.md).</sub>
 
-# What will be printed by each of the following code snippets?
+# var, consts and scope
+
+## What will be printed by each of the following code snippets?
 
     var a = 1;
     var a = 2;
@@ -405,7 +422,7 @@ Result: ?
 
 Result: ?
 
-## Result:
+## Result (assuming that you've tried):
 
     2
     SyntaxError: Identifier 'a' has already been declared
@@ -420,7 +437,9 @@ Result: ?
 * You cant declare a *const* (constant) without assigning it right away (as you cant assign again the same *const* variable, because you know, constant are constants.
 * You can declare *let* without assign it right away.
 
-# What will be printed?
+# Passing references around
+
+## What will be printed?
 
     var a = {
       b: 2
@@ -498,7 +517,9 @@ All you are assured of is that the constant will always point to the same object
 
 <sub>Where i got this example? [here.](http://stackoverflow.com/questions/23436437/why-can-i-change-value-of-a-constant-in-javascript)</sub>
 
-# What will be printed?
+# Destructing the ES6 code to get the knowledge
+
+## What will be printed?
 
     var a = {
       b: 1,
@@ -556,16 +577,20 @@ A property can be unpacked from an object and assigned to a variable with a diff
 
 The last *console.log*.. well, that's easy too. *g* was declared in the destruction as property of *a* but it doesnt have values assigned to it, so its *undefined*. And the property *h* has de default value of *1* on our destructor (but if *a* had the property *h* already there with some value assigned before, the result would be the original value and not the default *1*).
 
-# Consider the following:
+# ES5 to ES6, try to sum and then you will see
+
+## Consider the following:
     function func() {
       //**
     }
 
     func(1, 2, 3, 4);
 
-Add a code on the line //** (body of the function) which will print the sum of parameters. 
+## Add a code on the line //** (body of the function) which will print the sum of parameters. 
 
 Use ES5! Are you able to code in ES6? **Do changes on func only!**
+
+## Answer:
 
     // ES5
     function func() {
@@ -609,7 +634,9 @@ Any argument in the argument list can use spread syntax and it can be used multi
     var args = [0, 1];
     myFunction(-1, ...args, 2, ...[3]);
 
-# What will be printed?
+# new Array? = []? = which? why?
+
+## What will be printed?
 
     var arr = new Array(3);
     console.log(arr[1]);
@@ -636,7 +663,9 @@ You're telling the interpreter, I want to call the constructor "Array" and gener
 
 <sub>More about arrays [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and [here](http://stackoverflow.com/questions/931872/what-s-the-difference-between-array-and-while-declaring-a-javascript-ar).</sub>
 
-# What will be printed? (separate execution)
+# Arrays and Objects
+
+## What will be printed? (separate execution)
 
     var arr = [{1: '2'}, {2: '1'}];
     console.log(arr['1'])
@@ -644,7 +673,7 @@ You're telling the interpreter, I want to call the constructor "Array" and gener
     var arr = [1, 2];
     console.log(arr['1']);
 
-Result: 
+## Result: 
 
     {2: '1'}
 
@@ -676,8 +705,28 @@ Similarly, object properties which happen to be reserved words(!) can only be ac
 
 Take a look [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array).
 
-# Now its time for HARDER questions!
+# Now its time to increase the level dificulty + 1
 
-# Create a function which can be executed like this foo(x)(y) and will give the product between x and y.
+## Create a function which can be executed like this foo(x)(y) and will give the product between x and y.
 
-### Result:
+## Answer:
+
+    var foo = a => b => a * b;
+
+Very smart right? this was just to show the power of ES6.
+
+Answer with ES5:
+
+    function foo(x) {
+        return function(y) {
+            return (x * y);
+        };
+    }
+
+## But what? why?
+
+## Forgot this type of function... and Closures
+
+### The type of the function that i`ve forgot.
+
+### Closures
