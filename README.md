@@ -16,6 +16,6 @@ As only collaborators can contribute for now, create your own branch (use your G
 
 ## Collaborators
 - [Igor Octaviano](https://github.com/igoroctaviano)
-- [Rafael Câmara](https://github.com/rafaelcaramam)
+- [You](gifs/messi.gif)
 
 Made with :heart: by coffee
