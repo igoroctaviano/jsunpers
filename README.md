@@ -1,5 +1,6 @@
 # JSumpers
-*JavaScript Unordered Personal Study, **WOW**!*
+*JavaScript Ultimate Powerful Suff, **WOW**!*
+<sub>OR JavaScript Unordered Personal Study, whatever.<sub/>
 
 A unordered collection of JavaScript questions & answers based on [study notes](https://github.com/igoroctaviano/jsunpers), the [spec](https://www.ecma-international.org), [books](https://github.com/getify/You-Dont-Know-JS), [MDN](https://developer.mozilla.org) and great answers on [Stack Overflow](https://pt.stackoverflow.com) (yup, you read that right).
 
