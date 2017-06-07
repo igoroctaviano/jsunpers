@@ -5,6 +5,8 @@ A unordered collection of JavaScript questions & answers based on [study notes](
 
 ![GIF](gifs/giphy.gif)
 
+## GOTO [questions & answers](es6/bundle.md)
+
 ## Contribution
 
 Any contributions you make to this effort **are profoundly appreciated**.
