@@ -55,6 +55,8 @@ Most browsers have a minimum delay that is more then 0, so putting 0 as delay me
 
 When you use a *let* variable in the *for* loop, it means that this variable is not acessible before it was declared in their enclosing block. A variable declared as *let* are block scoped variables. So it means that it only exists inside the *for* loop block. But when you use *var* instead, it means that the variable is scoped to the nearest function block, its not the case if you were using *let*, where it would be scoped to the nearest enclosing block. **But both are global if OUTSIDE any block!**
 
+So what happened here is that when the first *for* loop completed the counting, as we were using *var* (global), all those setTimeout will be popped out of the execution queue to be executed, and as the variable is global in this case, it has the total counting resulting in a sequence of *10* being printed. In the other hand, when the second *for* loop finishes his work of counting and calling (setTimeout) passing the callback to print the value and as we were using *let* or block scoped variables, when those *setTimeout* got out of the queue to be executed, they printed their individual values because each iteration created a new lexical scope in which each *setTimeout* were born, this thing is called closure that is *the ability of a function to rembember its declaration scope* even being executed outside of it. This means that every closure captures a different *x* instance. Since when the *let* expression is used, every iteration creates a new lexical scope chained up to the previous scope. 
+
     let me = 'go';   // globally scoped
     var i = 'able';  // globally scoped
 
@@ -135,10 +137,10 @@ Assuming [strict mode](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/R
 
 ## But what? why?
 
-So, basically, the first *console.log* will first ask for the value of the *ar* variable inside this enclosing block of code. As you can see, the variable *ar* was declared as *var* so it means that its scoped to the nearest function block, in our case, its the global (outside any function) and, it can be also acessed before it was declared. So as we can observe, we have another declaration of the variable *ar* and as it was declared as *var* it will override the current value of the variable *ar* that is *1*, holding the value *2* now. 
+So, basically, the first *console.log* will first ask for the value of the *ar* variable inside this enclosing block of code. As you can see, the variable *ar* was declared as *var* so it means that its scoped to the nearest function block, in our case, its the global (outside any function) and it can be also acessed before it was declared. So as we can see, we have another declaration of the variable *ar* and as it was declared as *var* it will override the current value of the variable *ar* that is *1*. Now it holds the value *2*.
 
 ### Lets imagine a conversation
-**console.log (actually it will be the engine) says:** "Hey code block, do you know about the value of *ar*?"; **code block says:** "Fore sure! his value is 2!". Then moving on to the next *console.log* statement, **console.log says:** "Dude, can you tell the value of *et*?"; **code block says:** "Yep! its 2!". As you can see in this example, we are using a *let* variable, it was not overwritten! because this *let* can only exists inside this enclosing block (this is how it works). Moving on... outside this code block, **console.log says:** "Hey code block, me again, whats the value of this *ar*?"; **code block says:** "Alright, it was overwritten by some other code, it was *1* but now its *2*!". Moving on.. we reached our last *console.log* statement! **console.log says:** "Just one more time, what's the value of *et*?"; **code block says:** "Its *1*!". And you know why, right? this *let* variable belongs to the nearest enclosing block and it means that it belongs to the global scope and it will not be overwritten inside some other code block.
+**console.log (actually it will be the engine) says:** "Hey code block, do you know about the value of *ar*?"; **code block says:** "Fore sure! the value is 2!". Moving on to the next *console.log* statement... **console.log says:** "Dude, can you tell me the value of *et*?".. **code block says:** "Yep! its 2!". As you can see in this example, we are using a *let* variable, it was not overwritten! because this *let* can only exist inside this enclosing block. Moving on... outside this code block, **console.log says:** "Hey code block, me again, whats the value of this *ar*?".. **code block says:** "Alright, it was overwritten!, it was *1* but now its *2*!". Moving on.. we reached our last *console.log* statement! **console.log says:** "Just one more time, what's the value of *et*?".. **code block says:** "Its *1*!". And you know why, right? this *let* variable belongs to the nearest enclosing block and it means that it belongs to the global scope and it will not be overwritten inside some other code block.
 
 # The hoisting mechanics
 
@@ -287,7 +289,7 @@ Well, lets see this code with the eyes of the compiler:
     console.log(iL);
     let iL = 10;
 
-As you can see, when the first *console.log* statement is called, the variale *i* have no value yet, it was decalred and initialized but assinged too late, causing the return of the value *undefined*. But wait a minute, why the *let* variable was not "Hoisted" moved to the top as the *var* was? In ECMAScript 2015, *let* will hoist the variable declaration to the top of the block, BUT NOT the initialization. Contrary to declaring a variable with *var*, which hoists both declaration and initialization, referencing the variable in the block before the initialization results in a *ReferenceError*. The variable is in a "temporal dead zone" from the start of the block until the initialization is processed. So it means that the *console.log* statement will execute and the variable *iL* was not initialized yet, causing *ReferenceError* to occur.
+As you can see, when the first *console.log* statement is called, the variale *i* have no value yet, it was declared and initialized but assigned too late, causing the return of the value *undefined*. But wait a minute, why the *let* variable was not "hoisted" or moved to the top like the *var*? In ECMAScript 2015, *let* will hoist the variable declaration to the top of the block, BUT NOT the initialization. Contrary to declaring a variable with *var*, which hoists both declaration and initialization, referencing the variable in the block before the initialization results in a *ReferenceError*. The variable is in a "temporal dead zone" from the start of the block until the initialization is processed. So it means that the *console.log* statement will execute and the variable *iL* was not initialized yet, causing *ReferenceError* to occur.
 
 Take care when using *let*! you wanna a exemple?
 
@@ -303,7 +305,7 @@ Due to lexical scoping, the identifier "foo" inside the expression (foo + 55) ev
 
 <sub>About the hoisting stuff with *lets*, i found it on [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let).</sub>
 
-# Some pitfalls without our friend, strict mode
+# Some pitfalls without our friend, the strict mode
 
 ## What will be printed?
 
@@ -357,7 +359,7 @@ We can see that we have 3 levels of scope here. The global is the first (the one
 
 As you can see, the first function looks weird. Its just a function that doesnt have a name and its being executed right before its declaration. *[IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE) (Immediately Invoked Function Expression) is a JavaScript function that runs as soon as it is defined*.
 
-Okay, lets understand why we didnt get a big add *ReferenceError* when the *console.log* statement was called with the paramter *b*, thats is a variable that was SEEMS NOT declared in this scope. 
+Okay, lets understand why we didnt get a big ass *ReferenceError* when the *console.log* statement was called with the paramter *b*, thats is a variable that was SEEMS NOT declared in this scope. 
 
 The thing is, when the IFFE function is called, the expression that will be executed inside of it is:
 
@@ -372,11 +374,11 @@ which equals to:
     b = 1; // Woops! b was not declared inside this function!
     var a = 1;
 
-which assigs the value *1* to a variable *b* that was not declared in this scope (function) and defines a local variable *a*. Whats going to happen is that the engine (something that will execute your code) will look for the reference of *b* to assign the value *1* to it. And guess what? the engine will ask the scope of the function and will discover that it was not declared there. So the engine will pop up one level (reaching the global scope) and since we are not using [strict mode](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Strict_mode), the engine will ask the global scope for the reference of *b* and the compiler will create the variable for the engine, yes! out of nothing, like dark magic! (as the compiler knows that it was used in some code but nobody declared it).
+which assigns the value *1* to a variable *b* that was not declared in this scope (function) and defines a local variable *a*. Whats going to happen is that the engine (something that will execute your code) will look for the reference of *b* to assign the value *1* to it. And guess what? the engine will ask the scope of the function and will discover that it was not declared there. So the engine will pop up one level (reaching the global scope) and since we are not using [strict mode](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Strict_mode), the engine will ask the global scope for the reference of *b* and the compiler will create the variable for the engine, yes! out of nothing, like dark magic! (as the compiler knows that it was used in some code but nobody declared it).
 
-This anwers why we got the value *1* on the first *console.log* statement. And as we can see, the SAME THING occurs in the other normal function (doesnt necessarily need to be an IFFE).
+This answers the question why we got the value *1* on the first *console.log* statement. And as we can see, the SAME THING occurs in the other normal function (doesnt necessarily need to be an IFFE).
 
-But why we got *ReferenceError* when the last *console.log* statement was called passing the variable *aAB*? well, because it was declared inside the function *ab*, not in the global scope. And you might wonder why the compiler didnt create another global variable... because it was declared! the compiler created the global *bAB* before because it was referenced (and the reference of it wasnt inside the function, in other words, it was not declared inside that function), so the engine moved to the next scope to look for it, and the engine asked the global scope (and the global scope had that because in other time, on the compiler phase, the compiler knew that this variable was referenced in the code and nobody declared it, so the compiler created this variable in the global scope).
+But why we got *ReferenceError* when the last *console.log* statement was called passing the variable *aAB*? well, because it was declared inside the function *ab* that we called before, not in the global scope. And you might wonder why the compiler didnt create another global variable... because it was declared! the compiler created the global *bAB* before because it was referenced (and the reference of it wasnt inside the function, in other words, it was not declared inside that function), so the engine moved to the next scope to look for it, and the engine asked the global scope (and the global scope had that because in other time, on the compiler phase, the compiler knew that this variable was referenced in the code and nobody declared it, so the compiler created this variable in the global scope).
 
 ![GIF](../gifs/baby.gif)
 
