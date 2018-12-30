@@ -17,6 +17,22 @@
 //       '### '
 //       '####'
 
-function steps(n) {}
+function steps(n) {
+
+  }
+}
+
+// function steps(n) {
+//   let slots = [];
+
+//   for (let i = 0; i < n; i++) {
+//     slots[i] = ' ';
+//   }
+
+//   for (let i = 0; i < n; i++) {
+//     slots[i] = '#';
+//     console.log(slots.join(''));
+//   }
+// }
 
 module.exports = steps;
